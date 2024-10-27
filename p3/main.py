@@ -6,8 +6,18 @@ from time import time, sleep
 
 get_duration = lambda start_time: time() - start_time
 
+get_duration.__doc__ = """Parameters:
+    start_time: time() object to start duration counting from
+Returns: Time duration between when function is called and start_time
+"""
 
 def split_list(list_, n):
+    """
+    Parameters:
+        list_: List to split into n parts
+        n: N° of parts to split list into
+    Returns: List of slices
+    """
     k, m = divmod(len(list_), n)
     return [list_[i * k + min(i, m) : (i + 1) * k + min(i + 1, m)] for i in range(n)]
 

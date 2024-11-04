@@ -10,6 +10,12 @@ Algorithm = Enum("Algorithm", [("Q_LEARNING", True), ("SARSA", False)])
 
 class QTable(dict):
     def __init__(self, file=None):
+        """
+        Subclass of dict representing q-table
+        Parameters:
+            file: Q-table from json
+        Returns: Q-table for agent
+        """
         if file is not None:
             super().__init__(load(open(file, "r")))
 
@@ -30,6 +36,17 @@ class State(dict):
         __=None,
         precision=1e4,
     ):
+        """
+        Subclass of dict a agent for CartPole Problem
+        Parameters:
+            observation: Observation object provided by simulator
+            _: Unused value from simulator object
+            terminated: Check if simulation has achieved end state
+            truncated: Check if simulation has achieved truncated state
+            __: Unused value from simulator object
+            precision: Precision in continuos to discrete values
+        Returns: State for agent
+        """
         self.terminated = terminated
         self.truncated = truncated
         self["position"] = int(precision * observation[0])  # [-4.8PREC, 4.8PREC]
@@ -52,6 +69,19 @@ class Agent:
         algorithm=Algorithm.Q_LEARNING,
         state_precision=1e4,
     ):
+        """
+        Agent for CartPole problem
+        Parameters:
+            lr: Learning rate
+            er: Exploration rate
+            gamma: Bellman Gamma
+            alpha_er: Weight for smoothing exploration rate function
+            file: Json file for Q-table
+            train: Makes agent trainable
+            algorithm: Algorithm for training agent
+            state_precision: Precision in continuos to discrete values
+        Returns: Agent for CartPole Problem
+        """
         self.trainable = train
         self.q_table = QTable(file)
         self.lr = lr
@@ -66,6 +96,11 @@ class Agent:
         self.gamma = gamma
 
     def next_action(self, state):
+        """
+        Parameters:
+            state: State object to analyze
+        Returns: Best action from state
+        """
         if random() > self.er and self.trainable:
             return choice(Agent.ACTION_SPACE)
 
@@ -77,8 +112,19 @@ class Agent:
     reward = lambda self, state: (
         1 if state["angle"] == 0 else (-1 if state.terminated else 0)
     )
+    reward.__doc__ = """Parameters:
+        state: State object to analyze
+    Returns: Reward from reward function
+    """
 
     def update(self, old_state, action, state):
+        """
+        Updates agent's Q-table
+        Parameters:
+            old_state: State before taking action
+            action: Action taken
+            state: State after taking taking action
+        """
         q = self.q_table.get(old_state, action, 0)
 
         match self.algorithm:
@@ -99,6 +145,13 @@ class Agent:
         )
 
     def run_episodes(self, n, seed=None, on_episode_end=None):
+        """
+        Run simulation for n episodes
+        Parameters:
+            n: Number of episodes to run
+            seed: Seed for each reset
+            on_episode_end: Lambda function to run after the end of each episode
+        """
         self.episodes = n
         env = gym.make("CartPole-v1", render_mode="human")
         observation, _ = env.reset(seed=seed) if seed is not None else env.reset()
@@ -128,9 +181,17 @@ class Agent:
         self.current_episode = None
 
     def episode_count(self):
+        """
+        Run as on_episode_end parameter to check progress of simulation
+        Returns: String showing simulation progress
+        """
         if not all([self.episodes, self.current_episode]):
             return "Not running"
 
         return f"{self.current_episode} / {self.episodes} {int(self.current_episode/self.episodes * 100)}%"
 
     save = lambda self, file: dump(dict(self.q_table), open(file, "w"))
+    save.__doc__ = """Dumps Q-table to json file
+    Parameters:
+        file: File directory to dump json to
+    """

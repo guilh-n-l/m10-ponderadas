@@ -47,33 +47,60 @@ Dois algoritmos de reinforcement learning foram desenvolvidos, e suas diferença
 A primeira coisa que teve de ser feita foi a transformação dos estados contínuos em estados discretos, essa meta foi atingida usando a transformação de números reais em números inteiros usando o arredondamento, como todos os valores eram números relativamente pequenos (com mínimo -5 e máximo 5), um parâmetro **precisão** foi adicionado, ele multiplica todos os valores para aumentar o número de estados inteiros possíveis.
 
 $$
-n' = \text{floor}(n) * P\\\text{}\\
-\small{P: \text{Precisão}}\\
-\small{n: \text{número contínuo}}\\
-\small{n': \text{número transformado}}\\
+n' = \text{floor}(n) * P\\
+$$
+
+$$
+\small{P: \text{Precisão}}
+$$
+$$
+\small{n: \text{Número contínuo}}
+$$
+$$
+\small{n': \text{Número transformado}}
 $$
 
 Após a discretização dos valores, foi criado uma Q-table com o par estado-ação sendo associados com um valor que classificaria as melhores ações a serem tomadas para um determinado estado. Essa Q-table é atualizada iterativamente a cada episódio e, para cada algoritmo, uma função determina o novo valor:
 
 $$
-\textbf{Q-Learning}\\
-Q'(s, a) = Q(s, a) + \alpha(r, \gamma \max_{a'}Q(s', a') - Q(s, a))\\\text{}\\
-\textbf{SARSA}\\
+\textbf{Q-Learning}
+$$
+$$
+Q'(s, a) = Q(s, a) + \alpha(r, \gamma \max_{a'}Q(s', a') - Q(s, a))
+$$
+
+$$
+\textbf{SARSA}
+$$
+$$
 Q'(s, a) = Q(s, a) + \alpha(r, \gamma Q(s', a') - Q(s, a))
 $$
 
-Para o exploration rate ($\espilon$), uma função de suavização foi aplicada, reduzindo o seu valor de acordo com a progressão dos episódios, isso permite que o agente confie mais nos valores registrados com o passar do tempo. A função abordada foi ilustrada abaixo:
+Para o exploration rate ($\epsilon$), uma função de suavização foi aplicada, reduzindo o seu valor de acordo com a progressão dos episódios, isso permite que o agente confie mais nos valores registrados com o passar do tempo. A função abordada foi ilustrada abaixo:
 
 $$
-\epsilon_i = \epsilon_0 - \arctan\left(\frac{e_i}{n\cdot a_\epsilon}\right); \max(i+1) = n\\\text{}\\
-\small{e_i} \text{: i-ésimo episódio}\\
-\small{\epsilon_i} \text{: i-ésimo exploration rate}\\
-\small{\alpha_\epsilon} \text{: Peso da suavização}\\
+\epsilon_i = \epsilon_0 - \arctan\left(\frac{e_i}{n\cdot a_\epsilon}\right); \max(i+1) = n
+$$
+
+$$
+\small{e_i} \text{: i-ésimo episódio}
+$$
+$$
+\small{\epsilon_i} \text{: i-ésimo exploration rate}
+$$
+$$
+\small{\alpha_\epsilon} \text{: Peso da suavização}
+$$
+$$
 \small{n} \text{: número de episódios}\\
 $$
 
 Para a função de recompensa, a seguinte função foi atrelada ao estado do ângulo do pole:
 
 $$
-r = \begin{cases}0; \text{Running}\,\&\,\theta\neq0\\1;\text{Running}\,\&\,\theta=0\\-1;\text{Lost}\end{cases}
+r = \begin{cases}
+0; \text{Running},\theta\neq0\\
+1;\text{Running},\theta=0\\
+-1;\text{Lost}
+\end{cases}
 $$

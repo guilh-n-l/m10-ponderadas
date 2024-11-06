@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <omp.h>
 #include <stdio.h>
+#define MAX(a,b) (((a)>(b))?(a):(b))
 
 /**
  * @brief Set thread start index and how many numbers to sum
@@ -49,38 +50,35 @@ int main(int argc, char* argv[]) {
 
     int numThreads = -1;
 
-    int  *threadsArr;
     #pragma omp parallel
     {
-        if (numThreads == -1) {
-            #pragma omp critical
-            {
-                int threads = omp_get_num_threads();
-                numThreads =  threads > arrLen ? arrLen : threads;
-                threadsArr = malloc(numThreads * sizeof(int));
-            }
+        #pragma omp single
+        {
+            int threads = omp_get_num_threads();
+            numThreads =  MAX(threads > arrLen / 2 ? arrLen / 2: threads, 1);
         }
     }
-    double s = omp_get_wtime();
-    #pragma omp parallel
-    {
 
+    double s = omp_get_wtime();
+    int collector = 0;
+    #pragma omp parallel num_threads(numThreads) reduction(+:collector)
+    {
         int threadNum = omp_get_thread_num();
 
-        if (threadNum + 1 <= arrLen) {
-            int threadRangeArr[2];
-
-            getThreadRange(threadNum, numThreads, arrLen, threadRangeArr);
-
-            threadsArr[threadNum] = sumArray(threadRangeArr[1], &arr[threadRangeArr[0]]);
-        }   
+        int threadRangeArr[2];
+        getThreadRange(threadNum, numThreads, arrLen, threadRangeArr);
+        #pragma omp atomic
+        collector += sumArray(threadRangeArr[1], &arr[threadRangeArr[0]]);
     }
+    double ss = omp_get_wtime();
 
-    printf("\nN threads used: %d\nSum: %d\nElapsed time: %.8f\n\n", numThreads, sumArray(numThreads, threadsArr), omp_get_wtime() - s);
-    free(threadsArr);
+    printf("\nN threads used: %d\nSum: %d\nElapsed time: %.8f\n\n", numThreads, collector, ss - s);
 
     s = omp_get_wtime();
-    printf("N threads used: 1\nSum: %d\nElapsed time: %.8f\n", sumArray(arrLen, arr), omp_get_wtime() - s);
+    collector = sumArray(arrLen, arr);
+    ss = omp_get_wtime();
+
+    printf("N threads used: 1\nSum: %d\nElapsed time: %.8f\n", collector, omp_get_wtime() - s);
     free(arr);
     return 0;
 }

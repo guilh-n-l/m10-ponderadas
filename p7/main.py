@@ -299,7 +299,7 @@ class Algorithm(Enum):
                 case Policy.SOFTMAX:
                     act = choice(
                         array(list(range(4))),
-                        p=softmax(array([self.v_table[obs]] * 4)),
+                        p=softmax(array([self.v_table[i] for i in adjacent])),
                     )
                 case Policy.EPS_GREEDY:
                     if rand() < self.policy_type.epsilon:
@@ -371,7 +371,7 @@ class Algorithm(Enum):
                 str += f"n={self.n - 1} "
                 str += f"alpha={self.alpha} "
                 str += f"gamma={self.gamma} "
-                str += f"seed={self.seed})"
+                str += f"seed={self.seed} "
                 str += f"policy_type={self.policy_type})"
                 return str
             case _:
@@ -425,15 +425,15 @@ def track_episode_reward(step_reward_list, state, rewards):
 
 
 def main():
-    # env = get_env(human=True)
-    env = get_env()
+    env = get_env(human=True)
+    # env = get_env()
 
-    alg = Algorithm.TD.init(n=0, gamma=0.2, p_type=Policy.GREEDY)
+    alg = Algorithm.TD.init(n=10, gamma=0.2, p_type=Policy.GREEDY)
     print(alg)
     step_reward_list = []
     reward_list = []
     alg.run(
-        n_steps=1e4,
+        n_steps=1e10,
         on_step_end=track_episode_reward,
         on_step_end_args=[step_reward_list, Environ.STATE, reward_list],
     )

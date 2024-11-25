@@ -223,6 +223,7 @@ class Agent:
         self.epsilon_0 = epsilon_0
         self.gamma = gamma
         self.alpha = alpha
+        self.rewards = []
         self.loss = []
         self.accuracy = []
         self.n_episodes = 0
@@ -313,6 +314,7 @@ class Agent:
                     self.neural_net.net.predict(state.reshape(1, -1), verbose=0)
                 ).flatten()
 
+                self.rewards.append(reward)
                 target = reward
 
                 if not done:
@@ -377,12 +379,12 @@ class Agent:
         return self.n_episodes
 
 
-def main():
-    get_env(human=True)
-    agent_net = DeepQNet(n_dense=5, dense_sizes=[64, 32, 32, 16])
-    ag = Agent(agent_net, on_episode_end=print, on_episode_end_args=["acabei"])
-    ag.run_n_steps(int(1e12), human=True)
-
-
-if __name__ == "__main__":
-    main()
+# def main():
+#     get_env(human=True)
+#     agent_net = DeepQNet(n_dense=5, dense_sizes=[64, 32, 32, 16])
+#     ag = Agent(agent_net, on_episode_end=print, on_episode_end_args=["acabei"])
+#     ag.run_n_steps(int(1e12), human=True)
+#
+#
+# if __name__ == "__main__":
+#     main()

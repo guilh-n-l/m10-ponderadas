@@ -1,0 +1,7 @@
+Execution time for parallel sum,,,,
+,,Array Size,,
+Tool,Threading,1.93E+00,1.47E+01,1.30E+03
+,Multiprogramming,4.20E-01,1.32E+01,1.29E+03
+,CuPy,8.25E-01,9.35E-01,1.35E+00
+,OpenMP,6.08E-03,1.40E-02,1.00E-02
+,Cuda,1.16E-04,8.90E-05,1.18E-04

@@ -35,11 +35,11 @@ Obs5.: Para conseguir dar prosseguimento com o mesmo treinamento após a troca d
 
 ## 3 - Alteração da pista
 
-Para alterar a pista do simulador para o ambiente do Inteli, foi primeiramente necessário fazer a modificação da imagem do deepracer-simapp. Para fins de objetividade, esse procedimento não será descrito nesse documento. Após todo esse processo, foi modificada a variável `DR_SIMAPP_SOURCE` no arquivo system3.env com a imagem docker customizada e a variável `DR_WORLD_NAME` no arquivo run3.env para o nome da nova pista. Depois dessas alterações, o comando de update `cd ~/deepracer-for-cloud && dr-update && dr-update-env && dr-upload-custom-files` foi executado para alterar o ambiente de execução do simulador.
+Para alterar a pista do simulador para o ambiente do Inteli, foi primeiramente necessário fazer a modificação da imagem do deepracer-simapp. Para fins de objetividade, esse procedimento não será descrito nesse documento. Após todo esse processo, foi modificada a variável `DR_SIMAPP_SOURCE` no arquivo "system3.env" com a imagem docker customizada e a variável `DR_WORLD_NAME` no arquivo "run3.env" para o nome da nova pista. Depois dessas alterações, o comando de update `cd ~/deepracer-for-cloud && dr-update && dr-update-env && dr-upload-custom-files` foi executado para alterar o ambiente de execução do simulador.
 
 ## 4 - Alteração de hiper parâmetros e função de recompensa
 
-Para fazer ajustes no hiper parâmetros do treino ou na função de recompensa, dois arquivos que devem ser alterados, respectivamente, são o hyperparameter.json e o reward_function.py. O algoritmo de treino também pode ser alterado no arquivo model_metadata.json.
+Para fazer ajustes no hiper parâmetros do treino ou na função de recompensa, dois arquivos que devem ser alterados, respectivamente, são o "hyperparameter.json" e o "reward_function.py". O algoritmo de treino também pode ser alterado no arquivo "model_metadata.json".
 
 ## 5 - Avaliação do treinamento
 
@@ -48,3 +48,5 @@ Após parar o treinamento, é possível compilar todos os resultados e o agente 
 ## 6 - Demonstração
 
 Caso tenham ocorrido questionamentos durante a leitura do documento. Existe um vídeo demonstrativo no repositório
+
+[![Video](https://img.youtube.com/vi/NPw3_oHvBqo/0.jpg)](https://www.youtube.com/watch?v=NPw3_oHvBqo)
